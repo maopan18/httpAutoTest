@@ -18,13 +18,20 @@ report_path=os.path.join(os.path.dirname(current_path),"report")
 reportfile =os.path.join(report_path,"report.xlsx")
 copy_excel(testdatafile,reportfile)
 
+#登录信息
+loginData={"username":"xxxxxx","password":"yyyyyyy"}
+
+
 @ddt.ddt
 class Test_api(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        #登录
         cls.s = requests.session()
-        #在这里登录
+        cls.s.request(method="",
+                      url="",
+                      data=loginData)
 
     @ddt.data(*testdata["A"])
     def test_A(self,data):
@@ -47,10 +54,14 @@ class Test_api(unittest.TestCase):
         write_result(res,reportfile)
 
     def check(self,res,checkpoint):
-        res_dict = eval(res)
+        res_dict = eval(res['content'])
         check_dict = eval(checkpoint)
-
-        self.assertEqual(res_dict[""],check_dict[""],)
+        print(str(res_dict))
+        print(str(check_dict))
+        self.assertEqual(res_dict['userDesc'],check_dict['userDesc'])
+        self.assertEqual(res_dict["userType"],check_dict["userType"])
+        self.assertEqual(res_dict["code"],check_dict["code"])
+        self.assertEqual(res_dict["userName"],check_dict["userName"])
 
 if __name__=="__main__":
     unittest.main()
